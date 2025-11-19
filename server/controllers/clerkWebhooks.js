@@ -38,7 +38,7 @@ const clerkWebhooks = async (req, res) => {
       default:
         break;
     }
-    res.JSON({
+    res.json({
       success: true,
       message: "webhook recieved",
     });
