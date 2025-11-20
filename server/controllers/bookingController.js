@@ -236,12 +236,28 @@ export const stripePayment = async (req, res) => {
   try {
     await connectDB();
     const { bookingId } = req.body;
+
     const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.json({
+        success: false,
+        message: "Rezerwacja nie istnieje",
+      });
+    }
+
     const roomData = await Room.findById(
       booking.room
     ).populate("hotel");
+    if (!roomData) {
+      return res.json({
+        success: false,
+        message: "Pokój nie istnieje",
+      });
+    }
+
     const totalPrice = booking.totalPrice;
-    const origin = req.headers;
+    const origin = req.headers.origin;
+
     const stripeInstance = new stripe(
       process.env.STRIPE_SECRET_KEY
     );
@@ -251,25 +267,28 @@ export const stripePayment = async (req, res) => {
         price_data: {
           currency: "pln",
           product_data: {
-            name: roomData.hotel.name,
+            name: `${roomData.hotel.name} - ${roomData.roomType}`,
           },
           unit_amount: totalPrice * 100,
         },
         quantity: 1,
       },
     ];
+
     const session =
       await stripeInstance.checkout.sessions.create({
         line_items,
         mode: "payment",
-        success_url: `${origin}/loader/my-bookings`,
-        cancel_url: `${origin}/my-bookings`,
+        success_url: `${origin}/my-bookings?success=true&bookingId=${bookingId}`,
+        cancel_url: `${origin}/my-bookings?success=false`,
         metadata: {
           bookingId,
         },
       });
+
     res.json({ success: true, url: session.url });
   } catch (error) {
-    res.json({success:false, message: "Błąd transakcji"})
+    console.log("Stripe error:", error);
+    res.json({ success: false, message: error.message });
   }
 };
