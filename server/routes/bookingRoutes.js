@@ -5,6 +5,7 @@ import {
   cancelBooking,
   getHotelBookings,
   getUserBookings,
+  stripePayment,
 } from "../controllers/bookingController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
@@ -18,5 +19,11 @@ bookingRouter.post("/book", protect, createBooking);
 bookingRouter.post("/cancel", protect, cancelBooking);
 bookingRouter.get("/user", protect, getUserBookings);
 bookingRouter.get("/hotel", protect, getHotelBookings);
+
+bookingRouter.post(
+  "/stripe-payment",
+  protect,
+  stripePayment
+);
 
 export default bookingRouter;
