@@ -78,7 +78,8 @@
 
 | Home Page | Rooms List |
 |:---:|:---:|
-| ![Home](https://via.placeholder.com/400x200?text=Home+Page) | ![Rooms](https://via.placeholder.com/400x200?text=Rooms+List) |
+| ![Home](<img width="400" height="200" alt="h1" src="https://github.com/user-attachments/assets/53f2a8c1-7dd6-4ded-93d0-335c3c2fd433" />
+) | ![Rooms](https://via.placeholder.com/400x200?text=Rooms+List) |
 
 | Owner Dashboard | Booking History |
 |:---:|:---:|
