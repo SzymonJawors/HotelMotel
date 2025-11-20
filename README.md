@@ -79,11 +79,14 @@
 | Home Page | Rooms List |
 |:---:|:---:|
 | ![Home](<img width="400" height="200" alt="h1" src="https://github.com/user-attachments/assets/53f2a8c1-7dd6-4ded-93d0-335c3c2fd433" />
-) | ![Rooms](https://via.placeholder.com/400x200?text=Rooms+List) |
+) | ![Rooms](<img width="400" height="200" alt="h2" src="https://github.com/user-attachments/assets/f50da4b2-d124-46b9-a2e1-d5b3fed111fe" />
+) |
 
 | Owner Dashboard | Booking History |
 |:---:|:---:|
-| ![Dashboard](https://via.placeholder.com/400x200?text=Dashboard) | ![Bookings](https://via.placeholder.com/400x200?text=My+Bookings) |
+| ![Dashboard](<img width="400" height="200" alt="h3" src="https://github.com/user-attachments/assets/817646c6-4b39-4ab4-b00d-eeb456369098" />
+) | ![Bookings](<img width="400" height="200" alt="h4" src="https://github.com/user-attachments/assets/729fe26b-1695-435e-bda4-904235a55499" />
+) |
 
 ---
 
