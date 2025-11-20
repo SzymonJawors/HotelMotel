@@ -1,9 +1,11 @@
 import cloudinary from "../configs/cloudinary.js";
 import Hotel from "../models/Hotel.js";
 import Room from "../models/Room.js";
+import connectDB from "../configs/db.js";
 
 export const createRoom = async (req, res) => {
   try {
+    await connectDB();
     const { roomType, pricePerNight, amenities } = req.body;
     const hotel = await Hotel.findOne({
       owner: req.auth().userId,
@@ -36,6 +38,7 @@ export const createRoom = async (req, res) => {
 
 export const deleteRoom = async (req, res) => {
   try {
+    await connectDB();
     const { roomId } = req.body;
 
     const userId = req.user._id;
@@ -74,6 +77,7 @@ export const deleteRoom = async (req, res) => {
 
 export const getRooms = async (req, res) => {
   try {
+    await connectDB();
     const rooms = await Room.find({ isAvailable: true })
       .populate({
         path: "hotel",
@@ -88,8 +92,9 @@ export const getRooms = async (req, res) => {
 
 export const getOwnerRooms = async (req, res) => {
   try {
+    await connectDB();
     const hotelData = await Hotel.findOne({
-      owner: req.auth.userId,
+      owner: req.auth().userId,
     });
     if (!hotelData)
       return res.json({ success: false, rooms: [] });
@@ -105,6 +110,7 @@ export const getOwnerRooms = async (req, res) => {
 
 export const toggleRoomAvailability = async (req, res) => {
   try {
+    await connectDB();
     const { roomId } = req.body;
     const roomData = await Room.findById(roomId);
     if (!roomData)

@@ -1,15 +1,17 @@
 import mongoose from "mongoose";
 
 const connectDB = async () => {
+  if (mongoose.connections[0].readyState) {
+    return;
+  }
+
   try {
-    mongoose.connection.on("connected", () =>
-      console.log("Połączono z mongodb")
-    );
     await mongoose.connect(
       `${process.env.MONGODB_URI}/hotelmotel`
     );
+    console.log("Nowe połączenie z MongoDB");
   } catch (error) {
-    console.log(error.message);
+    console.error("Błąd łączenia z DB:", error.message);
   }
 };
 
