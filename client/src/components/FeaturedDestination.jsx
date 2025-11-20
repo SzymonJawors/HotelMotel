@@ -10,7 +10,7 @@ const FeaturedDestination = () => {
           title="Wybrane miejsca"
           subTitle="Odkryj naszą starannie wyselekcjonowaną kolekcję wyjątkowych obiektów z całego świata, które oferują niezrównany luksus, komfort i niezapomniane doświadczenia dla wymagających podróżnych."
         />
-        <div className="flex flex-col md:flex-row flex-wrap  justify-center gap-6 mt-20 w-full">
+        <div className="flex flex-col md:flex-row flex-wrap items-center  justify-center gap-6 mt-20 w-full">
           {rooms.slice(0, 4).map((room, index) => (
             <HotelCard
               key={room._id}
