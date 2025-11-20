@@ -33,7 +33,7 @@ const RecommendedHotels = () => {
           title="Polecane miejsca"
           subTitle="Poznaj nasze najlepiej oceniane i rekomendowane hotele oraz apartamenty, które zapewnią Ci wyjątkowy pobyt i pozwolą cieszyć się luksusem oraz najwyższym standardem usług."
         />
-        <div className="flex flex-wrap items-center justify-center gap-6 mt-20">
+        <div className="flex flex-col md:flex-row flex-wrap  justify-center gap-6 mt-20 w-full">
           {recommended.slice(0, 4).map((room, index) => (
             <HotelCard
               key={room._id}
