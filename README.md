@@ -78,11 +78,11 @@
 
 | Home Page | Rooms List |
 |:---:|:---:|
-| ![Home](<img width="400" height="200" alt="h1" src="https://github.com/user-attachments/assets/53f2a8c1-7dd6-4ded-93d0-335c3c2fd433" />) | ![Rooms](<img width="400" height="200" alt="h2" src="https://github.com/user-attachments/assets/f50da4b2-d124-46b9-a2e1-d5b3fed111fe" />) |
+| <img src="https://github.com/user-attachments/assets/53f2a8c1-7dd6-4ded-93d0-335c3c2fd433" width="400" alt="Home Page" /> | <img src="https://github.com/user-attachments/assets/f50da4b2-d124-46b9-a2e1-d5b3fed111fe" width="400" alt="Rooms List" /> |
 
 | Owner Dashboard | Booking History |
 |:---:|:---:|
-| ![Dashboard](<img width="400" height="200" alt="h3" src="https://github.com/user-attachments/assets/817646c6-4b39-4ab4-b00d-eeb456369098" />) | ![Bookings](<img width="400" height="200" alt="h4" src="https://github.com/user-attachments/assets/729fe26b-1695-435e-bda4-904235a55499" />) |
+| <img src="https://github.com/user-attachments/assets/817646c6-4b39-4ab4-b00d-eeb456369098" width="400" alt="Dashboard" /> | <img src="https://github.com/user-attachments/assets/729fe26b-1695-435e-bda4-904235a55499" width="400" alt="Bookings" /> |
 
 ---
 
