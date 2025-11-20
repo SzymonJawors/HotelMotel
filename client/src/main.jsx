@@ -4,7 +4,8 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { ClerkProvider } from "@clerk/clerk-react";
-import {plPL} from '@clerk/localizations'
+import { plPL } from "@clerk/localizations";
+import { AppProvider } from "./context/AppContext.jsx";
 
 const PUBLISHABLE_KEY = import.meta.env
   .VITE_CLERK_PUBLISHABLE_KEY;
@@ -20,7 +21,9 @@ createRoot(document.getElementById("root")).render(
     localization={plPL}
   >
     <BrowserRouter>
-      <App />
+      <AppProvider>
+        <App />
+      </AppProvider>
     </BrowserRouter>
   </ClerkProvider>
 );

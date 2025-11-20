@@ -23,10 +23,6 @@ import badgeIcon from './badgeIcon.svg'
 import menuIcon from './menuIcon.svg'
 import closeMenu from './closeMenu.svg'
 import guestsIcon from './guestsIcon.svg'
-import roomImg1 from './roomImg1.png'
-import roomImg2 from './roomImg2.png'
-import roomImg3 from './roomImg3.png'
-import roomImg4 from './roomImg4.png'
 import regImage from './regImage.png'
 import exclusiveOfferCardImg1 from "./exclusiveOfferCardImg1.png";
 import exclusiveOfferCardImg2 from "./exclusiveOfferCardImg2.png";
@@ -37,7 +33,19 @@ import listIcon from "./listIcon.svg";
 import uploadArea from "./uploadArea.svg";
 import totalBookingIcon from "./totalBookingIcon.svg";
 import totalRevenueIcon from "./totalRevenueIcon.svg";
-
+import seaIcon from './seaIcon.svg'
+import cityIcon from './cityIcon.svg'
+import gymIcon from './gymIcon.svg'
+import acIcon from './acIcon.svg'
+import bathIcon from './bathIcon.svg'
+import tvIcon from './tvIcon.svg'
+import minibarIcon from './minibarIcon.svg'
+import balconyIcon from './balconyIcon.svg'
+import kitchenIcon from './kitchenIcon.svg'
+import parkingIcon from './parkingIcon.svg'
+import petIcon from './petIcon.svg'
+import disabledIcon from './disabledIcon.svg'
+import coffeeIcon from './coffeeIcon.svg'
 
 export const assets = {
     logo,
@@ -72,6 +80,19 @@ export const assets = {
     uploadArea,
     totalBookingIcon,
     totalRevenueIcon,
+    seaIcon,
+    cityIcon,
+    gymIcon,
+    acIcon,
+    bathIcon,
+    tvIcon,
+    minibarIcon,
+    balconyIcon,
+    kitchenIcon,
+    parkingIcon,
+    petIcon,
+    disabledIcon,
+    coffeeIcon,
 }
 
 export const cities = [
@@ -87,20 +108,31 @@ export const exclusiveOffers = [
     { _id: 3, title: "Luksusowy Wypoczynek", description: "Rezerwuj 60 dni wcześniej i oszczędzaj na pobycie w naszych luksusowych obiektach na całym świecie.", priceOff: 30, expiryDate: "25 Wrz", image: exclusiveOfferCardImg3 },
 ]
 
-// Testimonials Dummy Data
 export const testimonials = [
     { id: 1, name: "Adam Kowalski", address: "Kraków, Polska", image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200", rating: 5, review: "Korzystałem z wielu platform rezerwacyjnych, ale żadna nie dorównuje spersonalizowanemu doświadczeniu i dbałości o szczegóły, jakie oferuje HotelMotel." },
     { id: 2, name: "Liam Johnson", address: "Nowy Jork, USA", image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200", rating: 4, review: "HotelMotel przerosło moje oczekiwania. Proces rezerwacji był prosty, a hotele — absolutnie najwyższej klasy. Bardzo polecam!" },
     { id: 3, name: "Maria Nowak", address: "Warszawa, Polska", image: "https://images.unsplash.com/photo-1701615004837-40d8573b6652?q=80&w=200", rating: 5, review: "Niesamowita obsługa! Zawsze znajduję najlepsze luksusowe noclegi dzięki HotelMotel. Ich rekomendacje nigdy nie zawodzą!" }
 ];
 
-// Facility Icon
 export const facilityIcons = {
     "Darmowe WiFi": assets.freeWifiIcon,
     "Darmowe śniadania": assets.freeBreakfastIcon,
     "Room Service": assets.roomServiceIcon,
     "Widok na góry": assets.mountainIcon,
     "Dostęp do basenu": assets.poolIcon,
+    "Widok na morze": assets.seaIcon,
+    "Widok na miasto": assets.cityIcon,
+    "Siłownia / Fitness": assets.gymIcon,
+    "Klimatyzacja": assets.acIcon,
+    "Prywatna łazienka": assets.bathIcon,
+    "Telewizor Smart TV": assets.tvIcon,
+    "Minibar": assets.minibarIcon,
+    "Balkon / Taras": assets.balconyIcon,
+    "Aneks kuchenny": assets.kitchenIcon,
+    "Miejsce parkingowe": assets.parkingIcon,
+    "Przyjazny zwierzętom": assets.petIcon,
+    "Udogodnienia dla niepełnosprawnych": assets.disabledIcon,
+    "Ekspres do kawy": assets.coffeeIcon,
 };
 
 export const roomCommonData = [
@@ -109,145 +141,3 @@ export const roomCommonData = [
     { icon: assets.locationFilledIcon, title: "Doskonała Lokalizacja", description: "90% gości oceniło lokalizację na 5 gwiazdek." },
     { icon: assets.heartIcon, title: "Płynny Check-In", description: "100% gości oceniło proces zameldowania na 5 gwiazdek." },
 ];
-
-
-// User Dummy Data
-export const userDummyData = {
-    "_id": "user_2unqyL4diJFP1E3pIBnasc7w8hP",
-    "username": "Great Stack",
-    "email": "user.greatstack@gmail.com",
-    "image": "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzJ2N2c5YVpSSEFVYVUxbmVYZ2JkSVVuWnFzWSJ9",
-    "role": "hotelOwner",
-    "createdAt": "2025-03-25T09:29:16.367Z",
-    "updatedAt": "2025-04-10T06:34:48.719Z",
-    "__v": 1,
-    "recentSearchedCities": [
-        "New York"
-    ]
-}
-
-// Hotel Dummy Data
-export const hotelDummyData = {
-    "_id": "67f76393197ac559e4089b72",
-    "name": "Urbanza Suites",
-    "address": "Main Road  123 Street , 23 Colony",
-    "contact": "+0123456789",
-    "owner": userDummyData,
-    "city": "New York",
-    "createdAt": "2025-04-10T06:22:11.663Z",
-    "updatedAt": "2025-04-10T06:22:11.663Z",
-    "__v": 0
-}
-
-export const roomsDummyData = [
-    {
-        "_id": "67f7647c197ac559e4089b96",
-        "hotel": hotelDummyData,
-        "roomType": "Pokój z podwójnym łóżkiem",
-        "pricePerNight": 399,
-        "amenities": ["Room Service", "Widok na góry", "Dostęp do basenu"],
-        "images": [roomImg1, roomImg2, roomImg3, roomImg4],
-        "isAvailable": true,
-        "createdAt": "2025-04-10T06:26:04.013Z",
-        "updatedAt": "2025-04-10T06:26:04.013Z",
-        "__v": 0
-    },
-    {
-        "_id": "67f76452197ac559e4089b8e",
-        "hotel": hotelDummyData,
-        "roomType": "Pokój z podwójnym łóżkiem",
-        "pricePerNight": 299,
-        "amenities": ["Room Service", "Widok na góry", "Dostęp do basenu"],
-        "images": [roomImg2, roomImg3, roomImg4, roomImg1],
-        "isAvailable": true,
-        "createdAt": "2025-04-10T06:25:22.593Z",
-        "updatedAt": "2025-04-10T06:25:22.593Z",
-        "__v": 0
-    },
-    {
-        "_id": "67f76406197ac559e4089b82",
-        "hotel": hotelDummyData,
-        "roomType": "Pokój z podwójnym łóżkiem",
-        "pricePerNight": 249,
-        "amenities": ["Darmowe WiFi", "Darmowe śniadania", "Room Service"],
-        "images": [roomImg3, roomImg4, roomImg1, roomImg2],
-        "isAvailable": true,
-        "createdAt": "2025-04-10T06:24:06.285Z",
-        "updatedAt": "2025-04-10T06:24:06.285Z",
-        "__v": 0
-    },
-    {
-        "_id": "67f763d8197ac559e4089b7a",
-        "hotel": hotelDummyData,
-        "roomType": "Pokój jednoosobowy",
-        "pricePerNight": 199,
-        "amenities": ["Darmowe WiFi", "Room Service", "Dostęp do basenu"],
-        "images": [roomImg4, roomImg1, roomImg2, roomImg3],
-        "isAvailable": true,
-        "createdAt": "2025-04-10T06:23:20.252Z",
-        "updatedAt": "2025-04-10T06:23:20.252Z",
-        "__v": 0
-    }
-];
-
-
-
-
-// User Bookings Dummy Data
-export const userBookingsDummyData = [
-    {
-        "_id": "67f76839994a731e97d3b8ce",
-        "user": userDummyData,
-        "room": roomsDummyData[1],
-        "hotel": hotelDummyData,
-        "checkInDate": "2025-04-30T00:00:00.000Z",
-        "checkOutDate": "2025-05-01T00:00:00.000Z",
-        "totalPrice": 299,
-        "guests": 1,
-        "status": "pending",
-        "paymentMethod": "Stripe",
-        "isPaid": true,
-        "createdAt": "2025-04-10T06:42:01.529Z",
-        "updatedAt": "2025-04-10T06:43:54.520Z",
-        "__v": 0
-    },
-    {
-        "_id": "67f76829994a731e97d3b8c3",
-        "user": userDummyData,
-        "room": roomsDummyData[0],
-        "hotel": hotelDummyData,
-        "checkInDate": "2025-04-27T00:00:00.000Z",
-        "checkOutDate": "2025-04-28T00:00:00.000Z",
-        "totalPrice": 399,
-        "guests": 1,
-        "status": "pending",
-        "paymentMethod": "Pay At Hotel",
-        "isPaid": false,
-        "createdAt": "2025-04-10T06:41:45.873Z",
-        "updatedAt": "2025-04-10T06:41:45.873Z",
-        "__v": 0
-    },
-    {
-        "_id": "67f76810994a731e97d3b8b4",
-        "user": userDummyData,
-        "room": roomsDummyData[3],
-        "hotel": hotelDummyData,
-        "checkInDate": "2025-04-11T00:00:00.000Z",
-        "checkOutDate": "2025-04-12T00:00:00.000Z",
-        "totalPrice": 199,
-        "guests": 1,
-        "status": "pending",
-        "paymentMethod": "Pay At Hotel",
-        "isPaid": false,
-        "createdAt": "2025-04-10T06:41:20.501Z",
-        "updatedAt": "2025-04-10T06:41:20.501Z",
-        "__v": 0
-    }
-]
-
-// Dashboard Dummy Data
-export const dashboardDummyData = {
-    "totalBookings": 3,
-    "totalRevenue": 897,
-    "bookings": userBookingsDummyData
-}

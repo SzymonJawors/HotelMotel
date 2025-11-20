@@ -1,16 +1,85 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Title from "../components/Title";
-import {
-  assets,
-  userBookingsDummyData,
-} from "../assets/assets";
+import { assets } from "../assets/assets";
+import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
+import ConfirmModal from "../components/ConfirmModal";
 
 const MyBookings = () => {
-  const [bookings, setBookings] = useState(
-    userBookingsDummyData
-  );
+  const { axios, getToken, user } = useAppContext();
+  const [bookings, setBookings] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [bookingToDelete, setBookingToDelete] =
+    useState(null);
+
+  const fetchUserBookings = async () => {
+    try {
+      const { data } = await axios.get(
+        "/api/bookings/user",
+        {
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+          },
+        }
+      );
+      if (data.success) {
+        setBookings(data.bookings);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const openCancelModal = (bookingId) => {
+    setBookingToDelete(bookingId);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmCancel = async () => {
+    if (!bookingToDelete) return;
+
+    try {
+      const { data } = await axios.post(
+        "/api/bookings/cancel",
+        { bookingId: bookingToDelete },
+        {
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+          },
+        }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        fetchUserBookings();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsModalOpen(false);
+      setBookingToDelete(null);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchUserBookings();
+    }
+  }, [user]);
+
   return (
     <div className="py-28 md:pb-35 md:pt-32 px-4 md:px-16 lg:px-24 xl:px-32">
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmCancel}
+        title="Anulowanie rezerwacji"
+        message="Czy na pewno chcesz anulować tę rezerwację? Tej operacji nie można cofnąć."
+      />
       <Title
         title="Moje rezerwacje"
         subTitle="Zarządzaj wszystkimi rezerwacjami w jednym miejscu - od historii pobytów, przez trwające wizyty, aż po przyszłe plany. Organizuj swoje podróże płynnie i wygodnie, zaledwie kilkoma kliknięciami."
@@ -22,92 +91,108 @@ const MyBookings = () => {
           <div className="w-1/3">Daty</div>
           <div className="w-1/3">Płatność</div>
         </div>
-        {bookings.map((booking) => (
-          <div
-            key={booking._id}
-            className="grid grid-cols-1 md:grid-cols-[3fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t"
-          >
-            <div className="flex flex-col md:flex-row">
-              <img
-                src={booking.room.images[0]}
-                alt="hotel img"
-                className="md:w-44 rounded shadow object-cover"
-              />
-              <div className="flex flex-col gap-1.5 max-md:mt-3 md:ml-4">
-                <p className="font-playfair text-2xl">
-                  {booking.hotel.name}
-                  <span className="font-inter text-sm ml-1">
-                    ({booking.room.roomType})
-                  </span>
-                </p>
-                <div className="flex items-center gap-1 text-sm text-gray-500">
-                  <img
-                    src={assets.locationIcon}
-                    alt="locationicon"
-                  />
-                  <span>{booking.hotel.address}</span>
+        {bookings.map((booking) => {
+          if (!booking.room || !booking.hotel) return null;
+
+          return (
+            <div
+              key={booking._id}
+              className="grid grid-cols-1 md:grid-cols-[3fr_2fr_1fr] w-full border-b border-gray-300 py-6 first:border-t"
+            >
+              <div className="flex flex-col md:flex-row">
+                <img
+                  src={
+                    booking.room.images
+                      ? booking.room.images[0]
+                      : ""
+                  }
+                  alt="hotel img"
+                  className="md:w-44 rounded shadow object-cover"
+                />
+                <div className="flex flex-col gap-1.5 max-md:mt-3 md:ml-4">
+                  <p className="font-playfair text-2xl">
+                    {booking.hotel.name}
+                    <span className="font-inter text-sm ml-1">
+                      ({booking.room.roomType})
+                    </span>
+                  </p>
+                  <div className="flex items-center gap-1 text-sm text-gray-500">
+                    <img
+                      src={assets.locationIcon}
+                      alt="locationicon"
+                    />
+                    <span>{booking.hotel.address}</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-sm text-gray-500">
+                    <img
+                      src={assets.guestsIcon}
+                      alt="guesticon"
+                    />
+                    <span>
+                      Liczba gości: {booking.guests}
+                    </span>
+                  </div>
+                  <p className="text-base">
+                    Cena: {booking.totalPrice}zł
+                  </p>
                 </div>
-                <div className="flex items-center gap-1 text-sm text-gray-500">
-                  <img
-                    src={assets.guestsIcon}
-                    alt="guesticon"
-                  />
-                  <span>
-                    Liczba gości: {booking.guests}
-                  </span>
+              </div>
+              <div className="flex flex-row md:items-center md:gap-12 mt-3 gap-8">
+                <div>
+                  <p>Zameldowanie:</p>
+                  <p className="text-gray-500 text-sm">
+                    {new Date(
+                      booking.checkInDate
+                    ).toLocaleDateString()}
+                  </p>
                 </div>
-                <p className="text-base">
-                  Cena: {booking.totalPrice}zł
-                </p>
+                <div>
+                  <p>Wymeldowanie:</p>
+                  <p className="text-gray-500 text-sm">
+                    {new Date(
+                      booking.checkOutDate
+                    ).toLocaleDateString()}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex flex-row md:items-center md:gap-12 mt-3 gap-8">
-              <div>
-                <p>Zameldowanie:</p>
-                <p className="text-gray-500 text-sm">
-                  {new Date(
-                    booking.checkInDate
-                  ).toLocaleDateString()}
-                </p>
-              </div>
-              <div>
-                <p>Wymeldowanie:</p>
-                <p className="text-gray-500 text-sm">
-                  {new Date(
-                    booking.checkOutDate
-                  ).toLocaleDateString()}
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col items-start justify-center pt-3">
-              <div className="flex items-center gap-2">
-                <div
-                  className={`h-3 w-3 rounded-full ${
-                    booking.isPaid
-                      ? "bg-green-500"
-                      : "bg-red-500"
-                  }`}
-                ></div>
-                <p
-                  className={`text-sm ${
-                    booking.isPaid
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
+              <div className="flex flex-col items-start justify-center pt-3">
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`h-3 w-3 rounded-full ${
+                      booking.isPaid
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                    }`}
+                  ></div>
+                  <p
+                    className={`text-sm ${
+                      booking.isPaid
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {booking.isPaid
+                      ? "Zapłacono"
+                      : "Czeka na zapłatę"}
+                  </p>
+                </div>
+                {!booking.isPaid && (
+                  <button className="px-4 py-1.5 mt-4 text-xs border border-gray-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer">
+                    Zapłać
+                  </button>
+                )}
+                <button
+                  onClick={() =>
+                    openCancelModal(booking._id)
+                  }
+                  className="px-4 py-1.5 text-xs border border-red-400 text-red-500 rounded-full hover:bg-red-50 transition-all cursor-pointer mt-4"
                 >
-                  {booking.isPaid
-                    ? "Zapłacono"
-                    : "Czeka na zapłatę"}
-                </p>
-              </div>
-              {!booking.isPaid && (
-                <button className="px-4 py-1.5 mt-4 text-xs border border-gray-400 rounded-full hover:bg-gray-50 transition-all cursor-pointer">
-                  Zapłać
+                  Anuluj rezerwacje
                 </button>
-              )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -5,6 +5,10 @@ import connectDB from "./configs/db.js";
 import { clerkMiddleware } from "@clerk/express";
 import clerkWebhooks from "./controllers/clerkWebhooks.js";
 import bodyParser from "body-parser";
+import userRouter from "./routes/userRoutes.js";
+import hotelRouter from "./routes/hotelRoutes.js";
+import roomRouter from "./routes/roomRoutes.js";
+import bookingRouter from "./routes/bookingRoutes.js";
 
 connectDB();
 
@@ -13,15 +17,18 @@ app.use(cors());
 
 app.post(
   "/api/clerk/webhook",
-  bodyParser.raw({type: "application/json"}),
+  bodyParser.raw({ type: "application/json" }),
   clerkWebhooks
-)
-
+);
 
 app.use(express.json());
 app.use(clerkMiddleware());
 
 app.get("/", (req, res) => res.send("API DZIAŁA"));
+app.use("/api/user", userRouter);
+app.use("/api/hotels", hotelRouter);
+app.use("/api/rooms", roomRouter);
+app.use("/api/bookings", bookingRouter);
 
 const PORT = process.env.PORT || 3000;
 

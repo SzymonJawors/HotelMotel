@@ -1,25 +1,92 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { data, useParams } from "react-router-dom";
 import {
   assets,
   facilityIcons,
   roomCommonData,
-  roomsDummyData,
 } from "../assets/assets";
 import StarRating from "../components/StarRating";
+import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 const RoomDetails = () => {
   const { id } = useParams();
+  const { rooms, getToken, axios, navigate } =
+    useAppContext();
   const [room, setRoom] = useState(null);
   const [mainImage, setMainImage] = useState(null);
+  const [checkInDate, setCheckInDate] = useState(null);
+  const [checkOutDate, setCheckOutDate] = useState(null);
+  const [guests, setGuests] = useState(1);
+  const [isAvailable, setIsAvailable] = useState(false);
+  const checkAvailability = async () => {
+    try {
+      if (checkInDate >= checkOutDate) {
+        toast.error(
+          "Data zameldowania powinna być mniejsza niż data wymeldowania"
+        );
+        return;
+      }
+      const { data } = await axios.post(
+        "/api/bookings/check-availability",
+        { room: id, checkInDate, checkOutDate }
+      );
+      if (data.success) {
+        if (data.isAvailable) {
+          setIsAvailable(true);
+          toast.success("Pokój dostępny");
+        } else {
+          setIsAvailable(false);
+          toast.error("Pokój niedostępny");
+        }
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const onSubmitHandler = async (e) => {
+    try {
+      e.preventDefault();
+      if (!isAvailable) {
+        return checkAvailability();
+      } else {
+        const { data } = await axios.post(
+          "/api/bookings/book",
+          {
+            room: id,
+            checkInDate,
+            checkOutDate,
+            guests,
+            paymentMethod: "Pay at hotel",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${await getToken()}`,
+            },
+          }
+        );
+
+        if (data.success) {
+          toast.success(data.message);
+          navigate("/my-bookings");
+          scrollTo(0, 0);
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   useEffect(() => {
-    const room = roomsDummyData.find(
-      (room) => room._id === id
-    );
+    const room = rooms.find((room) => room._id === id);
     room && setRoom(room);
     room && setMainImage(room.images[0]);
-  }, []);
+  }, [rooms]);
 
   return (
     room && (
@@ -95,7 +162,7 @@ const RoomDetails = () => {
             {room.pricePerNight}zł/noc
           </p>
         </div>
-        <form className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white shadow-[0px_0px_20px_rgba(0,0,0,0.15)] p-6 rounded-xl mx-auto mt-16 max-w-6xl">
+        <form onSubmit={onSubmitHandler} className="flex flex-col md:flex-row items-start md:items-center justify-between bg-white shadow-[0px_0px_20px_rgba(0,0,0,0.15)] p-6 rounded-xl mx-auto mt-16 max-w-6xl">
           <div className="flex flex-col flex-wrap md:flex-row items-start md:items-center gap-4 md:gap-10 text-gray-500">
             <div className="flex flex-col">
               <label
@@ -105,6 +172,10 @@ const RoomDetails = () => {
                 Zameldowanie
               </label>
               <input
+                onChange={(e) =>
+                  setCheckInDate(e.target.value)
+                }
+                min={new Date().toISOString().split("T")[0]}
                 type="date"
                 id="checkInDate"
                 placeholder="Zamelodwanie"
@@ -121,6 +192,11 @@ const RoomDetails = () => {
                 Wymeldowanie
               </label>
               <input
+                onChange={(e) =>
+                  setCheckOutDate(e.target.value)
+                }
+                min={checkInDate}
+                disabled={!checkInDate}
                 type="date"
                 id="checkOutDate"
                 placeholder="Wymeldowanie"
@@ -137,9 +213,11 @@ const RoomDetails = () => {
                 Liczba gości
               </label>
               <input
+                onChange={(e) => setGuests(e.target.value)}
+                value={guests}
                 type="number"
                 id="guests"
-                placeholder="0"
+                placeholder="1"
                 className="max-w-20 rouded border border-gray-300 px-3 py-2 mt-1.5 outline-none"
                 required
               />
@@ -149,7 +227,9 @@ const RoomDetails = () => {
             type="submit"
             className="bg-primary hover:bg-primary-dull active:scale-95 transition-all text-white rounded-md max-md:w-full max-md:mt-6 md:px-25 py-3 md:py-4 text-base cursor-pointer"
           >
-            Sprawdź dostępność
+            {isAvailable
+              ? "Zarezerwuj"
+              : "Zobacz dostępność"}
           </button>
         </form>
         <div className="mt-25 space-y-4">
@@ -185,17 +265,25 @@ const RoomDetails = () => {
         </div>
         <div className="flex flex-col items-start gap-4">
           <div className="flex gap-4">
-            <img src={room.hotel.owner.image} alt="host" className="h-14 w-14 md:h-18 md:w-18 rounded-full"/>
+            <img
+              src={room.hotel.owner.image}
+              alt="host"
+              className="h-14 w-14 md:h-18 md:w-18 rounded-full"
+            />
             <div>
-                <p className="text-lg md:text-xl">Gospodarz: {room.hotel.name}</p>
-                <div className="flex items-center mt-1">
-                    <StarRating />
-                    <p className="ml-2">200+ opini</p>
-                </div>
+              <p className="text-lg md:text-xl">
+                Gospodarz: {room.hotel.name}
+              </p>
+              <div className="flex items-center mt-1">
+                <StarRating />
+                <p className="ml-2">200+ opini</p>
+              </div>
             </div>
           </div>
         </div>
-        <button className="px-6 py-2.5 mt-4 rounded text-white bg-primary hover:bg-primary-dull transition-all cursor-pointer">Kontakt</button>
+        <button className="px-6 py-2.5 mt-4 rounded text-white bg-primary hover:bg-primary-dull transition-all cursor-pointer">
+          Kontakt
+        </button>
       </div>
     )
   );
