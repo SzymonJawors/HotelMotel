@@ -1,5 +1,8 @@
+import connectDB from "../configs/db.js";
+
 export const getUserData = async (req, res) => {
   try {
+    await connectDB();
     const role = req.user.role;
     const recentSearchedCities =
       req.user.recentSearchedCities;
@@ -14,6 +17,7 @@ export const storeRecentSearchedCities = async (
   res
 ) => {
   try {
+    await connectDB();
     const { recentSearchedCity } = req.body;
     const user = await req.user;
     if (user.recentSearchedCities.length < 3) {
@@ -23,8 +27,8 @@ export const storeRecentSearchedCities = async (
       user.recentSearchedCities.push(recentSearchedCity);
     }
     await user.save();
-    res.json({success: true, message: "dodano miasto"})
+    res.json({ success: true, message: "dodano miasto" });
   } catch (error) {
-    res.json({success: false, message: error.message})
+    res.json({ success: false, message: error.message });
   }
 };

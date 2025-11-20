@@ -2,6 +2,7 @@ import transporter from "../configs/nodemailer.js";
 import Booking from "../models/Booking.js";
 import Hotel from "../models/Hotel.js";
 import Room from "../models/Room.js";
+import connectDB from "../configs/db.js";
 
 const checkAvailability = async ({
   checkInDate,
@@ -9,6 +10,7 @@ const checkAvailability = async ({
   room,
 }) => {
   try {
+    await connectDB();
     const bookings = await Booking.find({
       room,
       checkInDate: { $lte: checkOutDate },
@@ -23,6 +25,7 @@ const checkAvailability = async ({
 
 export const checkAvailabilityAPI = async (req, res) => {
   try {
+    await connectDB();
     const { room, checkInDate, checkOutDate } = req.body;
     const isAvailable = await checkAvailability({
       checkInDate,
@@ -37,8 +40,10 @@ export const checkAvailabilityAPI = async (req, res) => {
 
 export const createBooking = async (req, res) => {
   try {
-    const { room, checkInDate, checkOutDate, guests } = req.body;
-    
+    await connectDB();
+    const { room, checkInDate, checkOutDate, guests } =
+      req.body;
+
     const userId = req.user._id;
 
     const isAvailable = await checkAvailability({
@@ -54,7 +59,9 @@ export const createBooking = async (req, res) => {
       });
     }
 
-    const roomData = await Room.findById(room).populate("hotel");
+    const roomData = await Room.findById(room).populate(
+      "hotel"
+    );
 
     if (!roomData) {
       return res.json({
@@ -81,36 +88,56 @@ export const createBooking = async (req, res) => {
     });
 
     if (req.user.email) {
-        try {
-            const dateOptions = {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-            };
-            const mailOptions = {
-                from: process.env.SENDER_EMAIL,
-                to: req.user.email,
-                subject: "Detale rezerwacji pokoju - HotelMotel",
-                html: `
+      try {
+        const dateOptions = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        };
+        const mailOptions = {
+          from: process.env.SENDER_EMAIL,
+          to: req.user.email,
+          subject: "Detale rezerwacji pokoju - HotelMotel",
+          html: `
                 <h2>Detale twojej rezerwacji</h2>
-                <p>Witaj ${req.user.username || "Użytkowniku"},</p>
+                <p>Witaj ${
+                  req.user.username || "Użytkowniku"
+                },</p>
                 <p>Dziękujemy za twoją rezerwacje! Poniżej znajdują się wszysktie potrzebne informacje:</p>
                 <ul>
-                <li><strong>ID rezerwacji:</strong> ${booking._id}</li>
-                <li><strong>Nazwa Hotelu:</strong> ${roomData.hotel.name}</li>
-                <li><strong>Lokalizacja hotelu:</strong> ${roomData.hotel.address}</li>
-                <li><strong>Data zameldowania:</strong> ${new Date(checkInDate).toLocaleDateString("pl-PL", dateOptions)}</li>
-                <li><strong>Data wymeldowania:</strong> ${new Date(checkOutDate).toLocaleDateString("pl-PL", dateOptions)}</li>
-                <li><strong>Cena całkowita:</strong> ${booking.totalPrice}zł</li>
+                <li><strong>ID rezerwacji:</strong> ${
+                  booking._id
+                }</li>
+                <li><strong>Nazwa Hotelu:</strong> ${
+                  roomData.hotel.name
+                }</li>
+                <li><strong>Lokalizacja hotelu:</strong> ${
+                  roomData.hotel.address
+                }</li>
+                <li><strong>Data zameldowania:</strong> ${new Date(
+                  checkInDate
+                ).toLocaleDateString(
+                  "pl-PL",
+                  dateOptions
+                )}</li>
+                <li><strong>Data wymeldowania:</strong> ${new Date(
+                  checkOutDate
+                ).toLocaleDateString(
+                  "pl-PL",
+                  dateOptions
+                )}</li>
+                <li><strong>Cena całkowita:</strong> ${
+                  booking.totalPrice
+                }zł</li>
                 </ul>
                 <p>Dziękujemy że wybrałeś nasz serwis!</p>
                 `,
-            };
-            await transporter.sendMail(mailOptions);
-        } catch (error) {
-            console.log("Mail error:", error.message);
-        }
+        };
+        await transporter.sendMail(mailOptions);
+      } catch (error) {
+        console.log("Mail error:", error.message);
+      }
     }
 
     res.json({ success: true, message: "zarezerwowano" });
@@ -122,6 +149,7 @@ export const createBooking = async (req, res) => {
 
 export const cancelBooking = async (req, res) => {
   try {
+    await connectDB();
     const { bookingId } = req.body;
     const userId = req.user._id;
 
@@ -137,7 +165,8 @@ export const cancelBooking = async (req, res) => {
     if (booking.user.toString() !== userId.toString()) {
       return res.json({
         success: false,
-        message: "Nie masz uprawnień do anulowania tej rezerwacji",
+        message:
+          "Nie masz uprawnień do anulowania tej rezerwacji",
       });
     }
 
@@ -155,6 +184,7 @@ export const cancelBooking = async (req, res) => {
 
 export const getUserBookings = async (req, res) => {
   try {
+    await connectDB();
     const userId = req.user._id;
     const bookings = await Booking.find({ user: userId })
       .populate("room hotel")
@@ -168,6 +198,7 @@ export const getUserBookings = async (req, res) => {
 
 export const getHotelBookings = async (req, res) => {
   try {
+    await connectDB();
     const hotel = await Hotel.findOne({
       owner: req.user._id,
     });
